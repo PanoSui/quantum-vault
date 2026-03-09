@@ -10,7 +10,7 @@ export function MyCharacter() {
       <Card className="bg-gradient-to-br from-slate-900 to-slate-800 border-slate-700 shadow-2xl">
         <CardHeader>
           <CardTitle className="text-slate-300 text-lg font-medium text-center">
-            My Character
+            In-Game Character
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -46,7 +46,7 @@ export function MyCharacter() {
       <Card className="bg-gradient-to-br from-slate-900 to-slate-800 border-slate-700 shadow-2xl">
         <CardHeader>
           <CardTitle className="text-slate-300 text-lg font-medium text-center">
-            My Character
+            In-Game Character
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -63,7 +63,7 @@ export function MyCharacter() {
     <Card className="bg-gradient-to-br from-slate-900 to-slate-800 border-slate-700 shadow-2xl">
       <CardHeader>
         <CardTitle className="text-slate-300 text-lg font-medium text-center">
-          My Character
+          In-Game Character
         </CardTitle>
       </CardHeader>
       <CardContent>

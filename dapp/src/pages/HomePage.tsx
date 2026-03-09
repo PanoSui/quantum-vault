@@ -40,9 +40,6 @@ export function HomePage() {
               <h2 className="text-3xl font-bold text-slate-100">
                 Your Quantum Dashboard
               </h2>
-              <p className="text-slate-400">
-                Wallet: {account.address.slice(0, 6)}...{account.address.slice(-4)}
-              </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
