@@ -1,0 +1,22 @@
+{
+  "name": "move",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "test": "sui move test -e testnet -p .",
+    "coverage": "pnpm test --coverage && sui move coverage summary -p .",
+    "deploy:localnet": "sui client test-publish --pubfile-path ../deployments/localnet/Pub.localnet.toml",
+    "deploy:devnet": "sui client test-publish --pubfile-path ../deployments/devnet/Pub.devnet.toml",
+    "deploy": "sui client publish",
+    "lint": "npx prettier-move -c ../**/*.move",
+    "fix": "pnpm lint --write",
+    "clean": "rm -rf ./node_modules && rm -rf ./build"
+  },
+  "devDependencies": {
+    "@mysten/prettier-plugin-move": "^0.3.1",
+    "prettier": "^3.6.2"
+  },
+  "dependencies": {
+    "@mysten/sui": "^2.6.0"
+  }
+}

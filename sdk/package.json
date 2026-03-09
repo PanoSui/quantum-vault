@@ -1,0 +1,30 @@
+{
+  "name": "sdk",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "deploy_localnet": "sui client switch --env localnet && cross-env NETWORK=localnet MVR_FALLBACK_NETWORK=testnet pnpm tsx ./src/scripts/deploy.ts",
+    "deploy_devnet": "sui client switch --env devnet && cross-env NETWORK=devnet MVR_FALLBACK_NETWORK=testnet pnpm tsx ./src/scripts/deploy.ts",
+    "deploy_testnet": "sui client switch --env testnet && cross-env NETWORK=testnet pnpm tsx ./src/scripts/deploy.ts",
+    "deploy_mainnet": "sui client switch --env mainnet && cross-env NETWORK=mainnet pnpm tsx ./src/scripts/deploy.ts",
+    "upload_token_image": "pnpm tsx ./src/scripts/upload_token_image.ts",
+    "mint": "cross-env NETWORK=testnet pnpm tsx ./src/scripts/mint.ts",
+    "test": "vitest run",
+    "lint": "npx prettier -c **/*.ts",
+    "fix": "npx prettier -c **/*.ts --write",
+    "clean": "rm -rf ./node_modules"
+  },
+  "devDependencies": {
+    "prettier": "^3.6.2",
+    "tsx": "^4.21.0",
+    "vitest": "^4.0.18"
+  },
+  "dependencies": {
+    "@easysui/sdk": "^1.0.1",
+    "@mysten/sui": "^2.6.0",
+    "@types/node": "^25.0.3",
+    "cross-env": "^10.0.0",
+    "node-fetch": "^3.3.2",
+    "typescript": "^5.9.2"
+  }
+}

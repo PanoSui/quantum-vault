@@ -1,0 +1,7 @@
+{
+  "routes": {
+    "/*": "/index.html"
+  },
+  "site_name": "Quantum Vault",
+  "object_id": "0x9a8a5ff8412391728a549cde8a01176bffb409f5c6f99382e970d7f90e0fc252"
+}
