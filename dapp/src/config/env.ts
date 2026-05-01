@@ -5,6 +5,7 @@ const envSchema = z.object({
   VITE_PACKAGE_ID: z.string().startsWith("0x"),
   VITE_QUANTUM_TREASURY_ID: z.string().startsWith("0x"),
   VITE_BRIBE_REGISTRY: z.string().startsWith("0x"),
+  VITE_SNIPER_REGISTRY: z.string().startsWith("0x"),
   VITE_WORLD_PACKAGE_ID: z.string().startsWith("0x"),
   VITE_OBJECT_REGISTRY: z.string().startsWith("0x"),
   VITE_ADMIN_ACL: z.string().startsWith("0x"),

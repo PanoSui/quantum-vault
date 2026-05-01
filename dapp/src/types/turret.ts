@@ -17,6 +17,7 @@ export interface Turret {
         name: string
     } | null;
     isBribable: boolean;
+    isSniper: boolean;
     isMine: boolean;
     remainingDays?: number;
 }

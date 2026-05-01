@@ -1,6 +1,7 @@
 import {BrowserRouter, Routes, Route} from "react-router";
 import {Toaster} from "sonner";
 import {HomePage} from "@/pages/HomePage";
+import {MapPage} from "@/pages/MapPage";
 import {Layout} from "@/components/layout/Layout";
 
 function App() {
@@ -10,6 +11,7 @@ function App() {
                 <Routes>
                     <Route element={<Layout/>}>
                         <Route index element={<HomePage/>}/>
+                        <Route path="map" element={<MapPage/>}/>
                     </Route>
                 </Routes>
             </BrowserRouter>

@@ -102,6 +102,7 @@ async function fetchTurrets(client: SuiGraphQLClient, character?: Character): Pr
     for(const obj of objs) {
         const turret = obj.json as unknown as Turret
         turret.isBribable = `0x${turret.extension?.name}` === `${PACKAGE_ID}::quantum_turret::QuantumTurretAuth`
+        turret.isSniper = `0x${turret.extension?.name}` === `${PACKAGE_ID}::snipper_turret::SniperTurretAuth`
         if (character && character.id) {
             const {object} = await client.getObject({
                 objectId: turret.owner_cap_id,
