@@ -5,5 +5,5 @@ edition = "2024"    # edition = "legacy" to use legacy (pre-2024) Move
 # authors = ["..."]      # e.g., ["Joe Smith (joesmith@noemail.com)", "John Snow (johnsnow@noemail.com)"]
 
 [dependencies]
-world = { git = "https://github.com/evefrontier/world-contracts.git", subdir = "contracts/world", rev = "main", use-environment = "testnet_utopia" }
+world = { git = "https://github.com/evefrontier/world-contracts.git", subdir = "contracts/world", rev = "main", use-environment = "testnet" }
 #world = { r.mvr = "@evefrontier/world-uat", use-environment = "testnet_utopia" }

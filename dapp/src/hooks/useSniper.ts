@@ -1,33 +1,28 @@
-import {useCurrentAccount, useCurrentClient, useDAppKit} from "@mysten/dapp-kit-react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useCurrentClient, useDAppKit} from "@mysten/dapp-kit-react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Transaction } from "@mysten/sui/transactions";
 import { queryKeys } from "@/constants/queryKeys";
 import {
   PACKAGE_ID,
 } from "@/constants/contracts";
 import {env} from "@/config/env.ts";
-import {useMyCharacter} from "@/hooks/useCharacter.ts";
+import type {SuiGraphQLClient} from "@mysten/sui/graphql";
+import {Character} from "@/types/character.ts";
 
 export function useSnipe() {
   const dAppKit = useDAppKit();
   const client = useCurrentClient();
-  const account = useCurrentAccount();
   const queryClient = useQueryClient();
-  const {character} = useMyCharacter();
 
   return useMutation({
-    mutationFn: async (characterId: string) => {
-      if (!character) {
-        return
-      }
-
+    mutationFn: async (character: Character) => {
       const transaction = new Transaction();
 
       transaction.moveCall({
         target: `${PACKAGE_ID}::sniper_turret::snipe`,
         arguments: [
           transaction.object(env.VITE_SNIPER_REGISTRY),
-          transaction.object(characterId),
+          transaction.object(character.id),
         ],
       });
 
@@ -41,7 +36,7 @@ export function useSnipe() {
     },
     onSuccess: async (_data) => {
       await queryClient.invalidateQueries({
-        queryKey: queryKeys.turrets.list(account?.address || ""),
+        queryKey: queryKeys.sniper.target(),
       });
     },
     onError: (error) => {
@@ -53,23 +48,16 @@ export function useSnipe() {
 export function useUnsnipe() {
   const dAppKit = useDAppKit();
   const client = useCurrentClient();
-  const account = useCurrentAccount();
   const queryClient = useQueryClient();
-  const {character} = useMyCharacter();
 
   return useMutation({
-    mutationFn: async (characterId: string) => {
-      if (!character) {
-        return
-      }
-
+    mutationFn: async () => {
       const transaction = new Transaction();
 
       transaction.moveCall({
         target: `${PACKAGE_ID}::sniper_turret::unsnipe`,
         arguments: [
           transaction.object(env.VITE_SNIPER_REGISTRY),
-          transaction.object(characterId),
         ],
       });
 
@@ -83,11 +71,29 @@ export function useUnsnipe() {
     },
     onSuccess: async (_data) => {
       await queryClient.invalidateQueries({
-        queryKey: queryKeys.turrets.list(account?.address || ""),
+        queryKey: queryKeys.sniper.target(),
       });
     },
     onError: (error) => {
       console.error("Failed to unsnipe character:", error);
+    },
+  });
+}
+
+export function useSniperTarget() {
+  const client = useCurrentClient() as SuiGraphQLClient;
+
+  return useQuery({
+    queryKey: queryKeys.sniper.target(),
+    queryFn: async () => {
+      const object = await client.getObject({
+        objectId: env.VITE_SNIPER_REGISTRY,
+        include: {
+          json: true
+        }
+      })
+
+      return (object.object.json as any).target.toString()
     },
   });
 }

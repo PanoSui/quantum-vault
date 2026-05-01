@@ -49,6 +49,8 @@ async function fetchCharactersIds(client: SuiGraphQLClient): Promise<string[]> {
     const turretIds: string[] = [];
     let cursor: string | null = null;
 
+    console.log(type);
+    
     for (let page = 0; page < MAX_PAGES; page++) {
         const result: GraphQLQueryResult<CharactersLookupResponse> =
             await client.query({

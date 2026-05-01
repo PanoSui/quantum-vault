@@ -1,9 +1,12 @@
 import { useMemo, useState } from "react";
-import { Swords } from "lucide-react";
+import { Crosshair, ExternalLink, Swords, X } from "lucide-react";
 import { toast } from "sonner";
 import { useTurrets } from "@/hooks/useTurrets";
+import { useCharacters } from "@/hooks/useCharacters";
+import { useRegisterSniperTurret } from "@/hooks/useRegisterSniperTurret";
 import { explorerUrl } from "@/lib/explorer";
 import type { Turret } from "@/types/turret";
+import type { Character } from "@/types/character";
 import {
   Dialog,
   DialogContent,
@@ -12,6 +15,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import {useSniperTarget, useSnipe, useUnsnipe} from "@/hooks/useSniper.ts";
 
 const PADDING_PERCENT = 5;
 
@@ -108,6 +112,7 @@ const SHIP_SIZE: Record<(typeof SHIP_CLASSES)[number], number> = {
 
 interface Spaceship {
   id: string;
+  character: Character;
   name: string;
   shipClass: (typeof SHIP_CLASSES)[number];
   faction: string;
@@ -121,9 +126,11 @@ interface Spaceship {
   rotation: number;
 }
 
-function generateShips(): Spaceship[] {
+function generateShips(characters: Character[]): Spaceship[] {
   const rand = mulberry32(0x5eedba11);
-  return Array.from({ length: SHIP_COUNT }, (_, i) => {
+  const count = Math.min(SHIP_COUNT, characters.length);
+  return Array.from({ length: count }, (_, i) => {
+    const character = characters[i];
     const shipClass = SHIP_CLASSES[Math.floor(rand() * SHIP_CLASSES.length)];
     const tier = ["I", "II", "III", "IV", "V"][Math.floor(rand() * 5)];
     const sizeMultiplier =
@@ -138,16 +145,15 @@ function generateShips(): Spaceship[] {
         : 1.6;
     return {
       id: `ship-${i}`,
-      name: `${SHIP_NAMES[i]} ${tier}`,
+      character,
+      name: character.metadata?.name || `${SHIP_NAMES[i % SHIP_NAMES.length]} ${tier}`,
       shipClass,
       faction: SHIP_FACTIONS[Math.floor(rand() * SHIP_FACTIONS.length)],
       shield: Math.floor(500 + rand() * 4500 * sizeMultiplier),
       armor: Math.floor(500 + rand() * 3500 * sizeMultiplier),
       hull: Math.floor(500 + rand() * 2500 * sizeMultiplier),
       damage: Math.floor(50 + rand() * 750 * sizeMultiplier),
-      pilot: `0x${Math.floor(rand() * 0xffffffff)
-        .toString(16)
-        .padStart(8, "0")}`,
+      pilot: character.character_address,
       x: PADDING_PERCENT + rand() * (100 - PADDING_PERCENT * 2),
       y: PADDING_PERCENT + rand() * (100 - PADDING_PERCENT * 2),
       rotation: Math.floor(rand() * 360),
@@ -157,22 +163,71 @@ function generateShips(): Spaceship[] {
 
 export function MapPage() {
   const { data: turrets, isLoading, error } = useTurrets();
+  const { data: characters } = useCharacters();
+  const { data: target } = useSniperTarget();
+  const { mutate: registerSniper, isPending: isRegisteringSniper } = useRegisterSniperTurret();
+  const { mutate: snipe, isPending: isSniping } = useSnipe();
+  const { mutate: unsnipe, isPending: isUnsniping } = useUnsnipe();
   const [hovered, setHovered] = useState<string | null>(null);
   const [selectedShip, setSelectedShip] = useState<Spaceship | null>(null);
+  const [selectedTurret, setSelectedTurret] = useState<Turret | null>(null);
 
   const stars = useMemo(generateStars, []);
-  const ships = useMemo(generateShips, []);
+  const ships = useMemo(
+    () => generateShips(characters ?? []),
+    [characters]
+  );
   const placedTurrets = useMemo(
     () => (turrets ?? []).map((t) => ({ turret: t, ...turretPosition(t) })),
     [turrets]
   );
 
+  const isSelectedShipTargeted = target === selectedShip?.character.key.item_id;
+
   const handleAttack = () => {
     if (!selectedShip) return;
-    toast.success(`Attack launched on ${selectedShip.name}`, {
-      description: `${selectedShip.shipClass} • ${selectedShip.faction}`,
+    if (isSelectedShipTargeted) {
+      unsnipe(undefined, {
+        onSuccess: () => {
+          toast.success(`Stopped sniping ${selectedShip.name}`);
+          setSelectedShip(null);
+        },
+        onError: (err) => {
+          toast.error("Failed to stop sniping", {
+            description: err instanceof Error ? err.message : String(err),
+          });
+        },
+      });
+    } else {
+      snipe(selectedShip.character, {
+        onSuccess: () => {
+          toast.success(`Sniper locked on ${selectedShip.name}`, {
+            description: `${selectedShip.shipClass} • ${selectedShip.faction}`,
+          });
+          setSelectedShip(null);
+        },
+        onError: (err) => {
+          toast.error("Failed to lock sniper target", {
+            description: err instanceof Error ? err.message : String(err),
+          });
+        },
+      });
+    }
+  };
+
+  const handleRegisterSniper = () => {
+    if (!selectedTurret) return;
+    registerSniper(selectedTurret, {
+      onSuccess: () => {
+        toast.success("Turret registered as sniper");
+        setSelectedTurret(null);
+      },
+      onError: (err) => {
+        toast.error("Failed to register sniper turret", {
+          description: err instanceof Error ? err.message : String(err),
+        });
+      },
     });
-    setSelectedShip(null);
   };
 
   return (
@@ -234,12 +289,7 @@ export function MapPage() {
             style={{ left: `${x}%`, top: `${y}%`, zIndex: isHovered ? 30 : 10 }}
             onMouseEnter={() => setHovered(turret.id)}
             onMouseLeave={() => setHovered(null)}
-            onClick={() =>
-              window.open(
-                explorerUrl({ type: "object", id: turret.id }),
-                "_blank"
-              )
-            }
+            onClick={() => setSelectedTurret(turret)}
           >
             <div
               className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full blur-md transition-all group-hover:blur-lg"
@@ -303,7 +353,9 @@ export function MapPage() {
 
       {ships.map((ship) => {
         const isHovered = hovered === ship.id;
+        const isTargeted = target === ship.character.key.item_id;
         const size = SHIP_SIZE[ship.shipClass];
+        const reticleSize = size * 2;
         return (
           <div
             key={ship.id}
@@ -311,7 +363,7 @@ export function MapPage() {
             style={{
               left: `${ship.x}%`,
               top: `${ship.y}%`,
-              zIndex: isHovered ? 30 : 15,
+              zIndex: isTargeted ? 25 : isHovered ? 30 : 15,
             }}
             onMouseEnter={() => setHovered(ship.id)}
             onMouseLeave={() => setHovered(null)}
@@ -322,21 +374,67 @@ export function MapPage() {
               style={{
                 width: size * 1.4,
                 height: size * 1.4,
-                backgroundColor: "#22d3ee",
-                opacity: 0.18,
+                backgroundColor: isTargeted ? "#ef4444" : "#22d3ee",
+                opacity: isTargeted ? 0.35 : 0.18,
               }}
             />
+            {isTargeted && (
+              <div
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none animate-pulse"
+                style={{ width: reticleSize, height: reticleSize }}
+              >
+                <svg viewBox="0 0 100 100" className="w-full h-full">
+                  <g
+                    fill="none"
+                    stroke="#ef4444"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                  >
+                    <path d="M5 20 L5 5 L20 5" />
+                    <path d="M80 5 L95 5 L95 20" />
+                    <path d="M95 80 L95 95 L80 95" />
+                    <path d="M20 95 L5 95 L5 80" />
+                    <line x1="50" y1="0" x2="50" y2="14" />
+                    <line x1="50" y1="86" x2="50" y2="100" />
+                    <line x1="0" y1="50" x2="14" y2="50" />
+                    <line x1="86" y1="50" x2="100" y2="50" />
+                  </g>
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="34"
+                    fill="none"
+                    stroke="#ef4444"
+                    strokeWidth="1.2"
+                    strokeDasharray="4 4"
+                  />
+                </svg>
+              </div>
+            )}
             <div
               className="relative transition-transform group-hover:scale-125"
               style={{
                 width: size,
                 height: size,
                 transform: `rotate(${ship.rotation}deg)`,
-                filter: "drop-shadow(0 2px 6px rgba(0,0,0,0.6))",
+                filter: isTargeted
+                  ? "drop-shadow(0 0 6px rgba(239,68,68,0.9))"
+                  : "drop-shadow(0 2px 6px rgba(0,0,0,0.6))",
               }}
             >
               <ShipIcon shipClass={ship.shipClass} />
             </div>
+
+            {isTargeted && (
+              <div
+                className="absolute left-1/2 -translate-x-1/2 pointer-events-none"
+                style={{ top: `calc(50% + ${reticleSize / 2 + 4}px)` }}
+              >
+                <span className="bg-red-500/90 text-white text-[9px] font-bold tracking-widest px-1.5 py-0.5 rounded shadow-lg">
+                  TARGET
+                </span>
+              </div>
+            )}
 
             {isHovered && (
               <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 pointer-events-none">
@@ -345,6 +443,11 @@ export function MapPage() {
                     <span className="text-slate-100 font-semibold">
                       {ship.name}
                     </span>
+                    {isTargeted && (
+                      <span className="text-red-400 font-bold text-[10px] tracking-wider">
+                        SNIPER TARGET
+                      </span>
+                    )}
                   </div>
                   <div className="text-slate-400">
                     Class:{" "}
@@ -353,6 +456,13 @@ export function MapPage() {
                   <div className="text-slate-400">
                     Faction:{" "}
                     <span className="text-slate-300">{ship.faction}</span>
+                  </div>
+                  <div className="text-slate-400">
+                    Character ID:{" "}
+                    <span className="text-slate-300 font-mono">
+                      {ship.character.id.slice(0, 6)}...
+                      {ship.character.id.slice(-4)}
+                    </span>
                   </div>
                 </div>
                 <div
@@ -388,11 +498,129 @@ export function MapPage() {
           </div>
           Spaceship
         </div>
+        <div className="flex items-center gap-2 text-slate-300">
+          <Crosshair className="h-4 w-4 text-red-400" />
+          Sniper target
+        </div>
         <div className="text-slate-500 border-t border-slate-700 pt-2">
           {placedTurrets.length} turret
           {placedTurrets.length === 1 ? "" : "s"} · {ships.length} ships
+          {typeof target === "number" && target > 0 && (
+            <>
+              {" "}
+              · target #
+              <span className="text-red-300 font-mono">{target}</span>
+            </>
+          )}
         </div>
       </div>
+
+      <Dialog
+        open={selectedTurret !== null}
+        onOpenChange={(open) => !open && setSelectedTurret(null)}
+      >
+        <DialogContent className="bg-gradient-to-br from-slate-900 to-slate-800 border-slate-700 text-slate-100">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-blue-300 flex items-center gap-3">
+              <img src="/turret.png" alt="Turret" className="h-7 w-7" />
+              Turret
+            </DialogTitle>
+          </DialogHeader>
+
+          {selectedTurret && (
+            <div className="space-y-4 py-2">
+              <div className="grid grid-cols-2 gap-3 text-sm">
+                <div className="col-span-2">
+                  <p className="text-xs text-slate-400 uppercase tracking-wide">
+                    Turret ID
+                  </p>
+                  <a
+                    href={explorerUrl({ type: "object", id: selectedTurret.id })}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-mono text-xs text-blue-400 hover:text-blue-300 hover:underline inline-flex items-center gap-1"
+                  >
+                    {selectedTurret.id.slice(0, 12)}...
+                    {selectedTurret.id.slice(-12)}
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
+                </div>
+                <div>
+                  <p className="text-xs text-slate-400 uppercase tracking-wide">
+                    Item ID
+                  </p>
+                  <p className="font-mono text-xs text-slate-300">
+                    {selectedTurret.key.item_id}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs text-slate-400 uppercase tracking-wide">
+                    Status
+                  </p>
+                  <p
+                    className={
+                      selectedTurret.status.status["@variant"].toLowerCase() ===
+                      "offline"
+                        ? "text-red-300 font-semibold"
+                        : "text-blue-300 font-semibold"
+                    }
+                  >
+                    {selectedTurret.status.status["@variant"]}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs text-slate-400 uppercase tracking-wide">
+                    Owner
+                  </p>
+                  <p
+                    className={
+                      selectedTurret.isMine
+                        ? "text-purple-300 font-semibold"
+                        : "text-slate-300"
+                    }
+                  >
+                    {selectedTurret.isMine ? "You" : "Other"}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs text-slate-400 uppercase tracking-wide">
+                    Sniper
+                  </p>
+                  <p
+                    className={
+                      selectedTurret.isSniper
+                        ? "text-amber-300 font-semibold"
+                        : "text-slate-400"
+                    }
+                  >
+                    {selectedTurret.isSniper ? "Registered" : "Not registered"}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setSelectedTurret(null)}
+              className="border-slate-700 text-slate-300 hover:bg-slate-800"
+            >
+              Close
+            </Button>
+            {selectedTurret?.isMine && !selectedTurret.isSniper && (
+              <Button
+                onClick={handleRegisterSniper}
+                disabled={isRegisteringSniper}
+                className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <Crosshair className="h-4 w-4 mr-2" />
+                {isRegisteringSniper ? "Registering..." : "Register as Sniper"}
+              </Button>
+            )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <Dialog
         open={selectedShip !== null}
@@ -429,12 +657,21 @@ export function MapPage() {
                     {selectedShip.faction}
                   </p>
                 </div>
-                <div className="col-span-2">
+                <div className="col-span-1">
                   <p className="text-xs text-slate-400 uppercase tracking-wide">
                     Pilot
                   </p>
                   <p className="font-mono text-xs text-slate-300">
-                    {selectedShip.pilot}
+                    {selectedShip.pilot.slice(0, 6)}...
+                    {selectedShip.pilot.slice(-4)}
+                  </p>
+                </div>
+                <div className="col-span-1">
+                  <p className="text-xs text-slate-400 uppercase tracking-wide">
+                    Character Id
+                  </p>
+                  <p className="font-mono text-xs text-slate-300">
+                    {selectedShip.character.key.item_id}
                   </p>
                 </div>
               </div>
@@ -481,10 +718,24 @@ export function MapPage() {
             </Button>
             <Button
               onClick={handleAttack}
-              className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold"
+              disabled={isSniping || isUnsniping}
+              className={
+                isSelectedShipTargeted
+                  ? "bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                  : "bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+              }
             >
-              <Swords className="h-4 w-4 mr-2" />
-              Attack
+              {isSelectedShipTargeted ? (
+                <>
+                  <X className="h-4 w-4 mr-2" />
+                  {isUnsniping ? "Stopping..." : "Stop"}
+                </>
+              ) : (
+                <>
+                  <Swords className="h-4 w-4 mr-2" />
+                  {isSniping ? "Locking..." : "Attack"}
+                </>
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>
