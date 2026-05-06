@@ -7,7 +7,7 @@ import {
 } from "@/constants/contracts";
 import {env} from "@/config/env.ts";
 import type {SuiGraphQLClient} from "@mysten/sui/graphql";
-import {Character} from "@/types/character.ts";
+import {CharacterInfo} from "@evefrontier/dapp-kit";
 
 export function useSnipe() {
   const dAppKit = useDAppKit();
@@ -15,11 +15,9 @@ export function useSnipe() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (character: Character) => {
+    mutationFn: async (character: CharacterInfo) => {
       const transaction = new Transaction();
 
-      console.log(character);
-      
       transaction.moveCall({
         target: `${PACKAGE_ID}::sniper_turret::snipe`,
         arguments: [

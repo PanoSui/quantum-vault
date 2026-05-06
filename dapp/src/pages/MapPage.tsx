@@ -6,7 +6,8 @@ import { useCharacters } from "@/hooks/useCharacters";
 import { useRegisterSniperTurret } from "@/hooks/useRegisterSniperTurret";
 import { explorerUrl } from "@/lib/explorer";
 import type { Turret } from "@/types/turret";
-import type { Character } from "@/types/character";
+import {CharacterInfo} from "@evefrontier/dapp-kit";
+
 import {
   Dialog,
   DialogContent,
@@ -112,7 +113,7 @@ const SHIP_SIZE: Record<(typeof SHIP_CLASSES)[number], number> = {
 
 interface Spaceship {
   id: string;
-  character: Character;
+  character: CharacterInfo;
   name: string;
   shipClass: (typeof SHIP_CLASSES)[number];
   faction: string;
@@ -126,7 +127,7 @@ interface Spaceship {
   rotation: number;
 }
 
-function generateShips(characters: Character[]): Spaceship[] {
+function generateShips(characters: CharacterInfo[]): Spaceship[] {
   const rand = mulberry32(0x5eedba11);
   const count = Math.min(SHIP_COUNT, characters.length);
   return Array.from({ length: count }, (_, i) => {
@@ -146,14 +147,14 @@ function generateShips(characters: Character[]): Spaceship[] {
     return {
       id: `ship-${i}`,
       character,
-      name: character.metadata?.name || `${SHIP_NAMES[i % SHIP_NAMES.length]} ${tier}`,
+      name: character.name || `${SHIP_NAMES[i % SHIP_NAMES.length]} ${tier}`,
       shipClass,
       faction: SHIP_FACTIONS[Math.floor(rand() * SHIP_FACTIONS.length)],
       shield: Math.floor(500 + rand() * 4500 * sizeMultiplier),
       armor: Math.floor(500 + rand() * 3500 * sizeMultiplier),
       hull: Math.floor(500 + rand() * 2500 * sizeMultiplier),
       damage: Math.floor(50 + rand() * 750 * sizeMultiplier),
-      pilot: character.character_address,
+      pilot: character.address,
       x: PADDING_PERCENT + rand() * (100 - PADDING_PERCENT * 2),
       y: PADDING_PERCENT + rand() * (100 - PADDING_PERCENT * 2),
       rotation: Math.floor(rand() * 360),
@@ -182,7 +183,7 @@ export function MapPage() {
     [turrets]
   );
 
-  const isSelectedShipTargeted = target === selectedShip?.character.key.item_id;
+  const isSelectedShipTargeted = target === selectedShip?.character._raw?.key.item_id;
 
   const handleAttack = () => {
     if (!selectedShip) return;
@@ -353,7 +354,7 @@ export function MapPage() {
 
       {ships.map((ship) => {
         const isHovered = hovered === ship.id;
-        const isTargeted = target === ship.character.key.item_id;
+        const isTargeted = target === ship.character._raw?.key.item_id;
         const size = SHIP_SIZE[ship.shipClass];
         const reticleSize = size * 2;
         return (
@@ -671,7 +672,7 @@ export function MapPage() {
                     Character Id
                   </p>
                   <p className="font-mono text-xs text-slate-300">
-                    {selectedShip.character.key.item_id}
+                    {selectedShip.character._raw?.key.item_id}
                   </p>
                 </div>
               </div>

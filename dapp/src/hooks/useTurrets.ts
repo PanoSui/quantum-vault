@@ -1,6 +1,8 @@
-import {useCurrentAccount, useCurrentClient} from "@mysten/dapp-kit-react";
+import {useCurrentAccount} from "@mysten/dapp-kit-react";
 import { useQuery } from "@tanstack/react-query";
-import type { GraphQLQueryResult, SuiGraphQLClient } from "@mysten/sui/graphql";
+import type { GraphQLQueryResult } from "@mysten/sui/graphql";
+import { SuiGraphQLClient } from "@mysten/sui/graphql";
+
 import { queryKeys } from "@/constants/queryKeys";
 import {
     PACKAGE_ID,
@@ -8,7 +10,7 @@ import {
 } from "@/constants/contracts";
 import {Turret} from "@/types/turret.ts";
 import {useMyCharacter} from "@/hooks/useCharacter.ts";
-import {Character} from "@/types/character.ts";
+import type {CharacterInfo} from "@evefrontier/dapp-kit";
 import {Transaction} from "@mysten/sui/transactions";
 import {env} from "@/config/env.ts";
 import {getJsonRpcFullnodeUrl, SuiJsonRpcClient} from "@mysten/sui/jsonRpc";
@@ -28,7 +30,12 @@ const TURRETS_LOOKUP_QUERY = `
         endCursor
       }
       nodes {
-        address
+        asMoveObject {
+          contents {
+            json
+          }
+          address
+        }
       }
     }
   }
@@ -42,18 +49,21 @@ interface TurretsLookupResponse {
         };
         nodes: Array<{
             address: string;
+            asMoveObject: {
+                contents: {
+                    json: Turret;
+                };
+            } | null;
         }>;
     };
 }
 
 const PAGE_SIZE = 50;
-const MAX_PAGES = 1;
+const MAX_PAGES = 100;
 
-async function fetchTurretIds(client: SuiGraphQLClient): Promise<string[]> {
-    const turretIds: string[] = [];
+async function _fetchTurrets(client: SuiGraphQLClient): Promise<Turret[]> {
+    const turrets: Turret[] = [];
     let cursor: string | null = null;
-
-    console.log(TURRET_TYPE);
 
     for (let page = 0; page < MAX_PAGES; page++) {
         const result: GraphQLQueryResult<TurretsLookupResponse> =
@@ -66,8 +76,6 @@ async function fetchTurretIds(client: SuiGraphQLClient): Promise<string[]> {
                 },
             });
 
-        console.log(result.errors?.length);
-        
         if (result.errors?.length) {
             continue
             // throw new Error(result.errors.map((e) => e.message).join(", "));
@@ -76,50 +84,34 @@ async function fetchTurretIds(client: SuiGraphQLClient): Promise<string[]> {
         if (!result.data) break;
 
         for (const node of result.data.objects.nodes) {
-            turretIds.push(node.address);
+            turrets.push(node.asMoveObject?.contents.json as unknown as Turret);
         }
 
         if (!result.data.objects.pageInfo.hasNextPage) break;
         cursor = result.data.objects.pageInfo.endCursor;
     }
 
-    return turretIds;
+    return turrets;
 }
 
-async function fetchTurrets(client: SuiGraphQLClient, character?: Character): Promise<Turret[]> {
-    const turretIds = await fetchTurretIds(client);
+async function fetchTurrets(client: SuiGraphQLClient, character?: CharacterInfo | null): Promise<Turret[]> {
+    let turrets = await _fetchTurrets(client);
 
-    if (turretIds.length === 0) return [];
+    turrets = turrets.filter((t) => t)
 
-    const { objects } = await client.getObjects({
-        objectIds: turretIds,
-        include: { json: true },
-    });
-
-    const objs = objects
-        .filter((obj): obj is Exclude<typeof obj, Error> => !(obj instanceof Error))
-        .filter((obj) => obj.json != null)
-
-    const turrets = []
-    for(const obj of objs) {
-        const turret = obj.json as unknown as Turret
+    const fullTurrets: Turret[] = []
+    for(const turret of turrets) {
         turret.isBribable = `0x${turret.extension?.name}` === `${PACKAGE_ID}::quantum_turret::QuantumTurretAuth`
         turret.isSniper = `0x${turret.extension?.name}` === `${PACKAGE_ID}::snipper_turret::SniperTurretAuth`
-        if (character && character.id) {
-            const {object} = await client.getObject({
-                objectId: turret.owner_cap_id,
-                include: {json: true},
-            });
-            turret.isMine = character.id === object.owner.AddressOwner
+        turret.isMine = character?._raw?.owner_cap_id === turret.owner_cap_id
 
-            if (turret.isBribable && character.character_address) {
-                turret.remainingDays = await getImmunityRemainingEpochs(turret.id, parseInt(character.key.item_id), character.character_address)
-            }
+        if (turret.isBribable && character?.address) {
+            turret.remainingDays = await getImmunityRemainingEpochs(turret.id, character.characterId, character.address)
         }
-
-        turrets.push(turret)
+        fullTurrets.push(turret)
     }
-    return turrets
+
+    return fullTurrets
 }
 
 async function getImmunityRemainingEpochs(turretId: string, characterId: number, sender: string) {
@@ -151,13 +143,18 @@ async function getImmunityRemainingEpochs(turretId: string, characterId: number,
 
 export function useTurrets() {
     const currentAccount = useCurrentAccount();
-    const client = useCurrentClient() as SuiGraphQLClient;
+    // const client = useCurrentClient() as SuiGraphQLClient;
     const {data: character, isLoading} = useMyCharacter();
 
+    const client = new SuiGraphQLClient({
+        network: env.VITE_SUI_NETWORK,
+        url: env.VITE_SUI_GRAPHQL_URL,
+    })
+
     return useQuery({
-        queryKey: queryKeys.turrets.list(currentAccount?.address ?? ""),
+        queryKey: queryKeys.turrets.list(character?.id ?? ""),
         queryFn: () => fetchTurrets(client, character),
-        enabled: !!currentAccount && !isLoading,
-        staleTime: 10000
+        enabled: !!currentAccount && !isLoading && !!character?.id,
+        // staleTime: 10000
     });
 }
