@@ -11,6 +11,7 @@ export const queryKeys = {
   coinMetadata: {
     detail: (coinType: string) => ["coinMetadata", coinType] as const,
   },
+  myCharacter: ["myCharacter"] as const,
   quantumBalance: (owner: string) => ["quantum", "balance", owner] as const,
   suiBalance: (owner: string) => ["sui", "balance", owner] as const,
 } as const;

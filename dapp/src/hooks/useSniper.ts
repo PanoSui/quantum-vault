@@ -18,6 +18,8 @@ export function useSnipe() {
     mutationFn: async (character: Character) => {
       const transaction = new Transaction();
 
+      console.log(character);
+      
       transaction.moveCall({
         target: `${PACKAGE_ID}::sniper_turret::snipe`,
         arguments: [

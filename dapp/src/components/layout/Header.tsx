@@ -1,6 +1,6 @@
 import { ConnectButton } from "@mysten/dapp-kit-react/ui";
 import { Link, NavLink } from "react-router";
-import { LayoutDashboard, Map } from "lucide-react";
+import {LayoutDashboard, Map} from "lucide-react";
 
 const NAV_ITEMS = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard, end: true },

@@ -4,7 +4,7 @@ import type { GraphQLQueryResult, SuiGraphQLClient } from "@mysten/sui/graphql";
 import { queryKeys } from "@/constants/queryKeys";
 import {
     PACKAGE_ID,
-    WORLD_PACKAGE_ID,
+    TURRET_TYPE,
 } from "@/constants/contracts";
 import {Turret} from "@/types/turret.ts";
 import {useMyCharacter} from "@/hooks/useCharacter.ts";
@@ -29,8 +29,6 @@ const TURRETS_LOOKUP_QUERY = `
       }
       nodes {
         address
-        version
-        digest
       }
     }
   }
@@ -49,26 +47,30 @@ interface TurretsLookupResponse {
 }
 
 const PAGE_SIZE = 50;
-const MAX_PAGES = 10;
+const MAX_PAGES = 1;
 
 async function fetchTurretIds(client: SuiGraphQLClient): Promise<string[]> {
-    const type = `${WORLD_PACKAGE_ID}::turret::Turret`;
     const turretIds: string[] = [];
     let cursor: string | null = null;
+
+    console.log(TURRET_TYPE);
 
     for (let page = 0; page < MAX_PAGES; page++) {
         const result: GraphQLQueryResult<TurretsLookupResponse> =
             await client.query({
                 query: TURRETS_LOOKUP_QUERY,
                 variables: {
-                    type: type,
+                    type: TURRET_TYPE,
                     first: PAGE_SIZE,
                     after: cursor,
                 },
             });
 
+        console.log(result.errors?.length);
+        
         if (result.errors?.length) {
-            throw new Error(result.errors.map((e) => e.message).join(", "));
+            continue
+            // throw new Error(result.errors.map((e) => e.message).join(", "));
         }
 
         if (!result.data) break;
@@ -150,11 +152,12 @@ async function getImmunityRemainingEpochs(turretId: string, characterId: number,
 export function useTurrets() {
     const currentAccount = useCurrentAccount();
     const client = useCurrentClient() as SuiGraphQLClient;
-    const {character, isLoading} = useMyCharacter();
+    const {data: character, isLoading} = useMyCharacter();
 
     return useQuery({
         queryKey: queryKeys.turrets.list(currentAccount?.address ?? ""),
         queryFn: () => fetchTurrets(client, character),
         enabled: !!currentAccount && !isLoading,
+        staleTime: 10000
     });
 }
