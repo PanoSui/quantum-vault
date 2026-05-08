@@ -95,21 +95,21 @@ async function _fetchTurrets(client: SuiGraphQLClient): Promise<Turret[]> {
 }
 
 async function fetchTurrets(client: SuiGraphQLClient, character?: CharacterInfo | null, accountAddress?: string): Promise<Turret[]> {
-    let turrets = await _fetchTurrets(client);
-    const res = accountAddress ? await getCharacterOwnedObjects(accountAddress) : []
+    let turrets: any = []
+    if (!accountAddress) {
+        turrets = await _fetchTurrets(client);
+        turrets = turrets.filter((t: any) => t)
+    } else {
+        turrets = await getCharacterOwnedObjects(accountAddress)
+        turrets = turrets.filter((t: any) => t.type_id === "92279")
+    }
 
-    const myTurretIds = res?.filter((t) => {
-        console.log(t);
-    })
-
-    turrets = turrets.filter((t) => t)
 
     const fullTurrets: Turret[] = []
     for(const turret of turrets) {
         turret.isBribable = `0x${turret.extension}` === `${PACKAGE_ID}::quantum_turret::QuantumTurretAuth`
         turret.isSniper = `0x${turret.extension}` === `${PACKAGE_ID}::sniper_turret::SniperTurretAuth`
-        // turret.isMine = character?._raw?.owner_cap_id === turret.owner_cap_id
-        // turret.isMine = true
+        turret.isMine = !!accountAddress
 
         if (turret.isBribable && character?.address) {
             turret.remainingDays = await getImmunityRemainingEpochs(turret.id, character.characterId, character.address)
@@ -117,11 +117,7 @@ async function fetchTurrets(client: SuiGraphQLClient, character?: CharacterInfo 
         fullTurrets.push(turret)
     }
 
-    return fullTurrets.filter((t) => [
-        '0x2c81ba130d6e79acfd9fe5f12c4e4681de633b86da205d181403ae880f38171a',
-        '0xc8009c558cf8bfb0f0943cb766f7c8ed8c3560ef356116af0fc55fd745ee7616',
-        '0x738a18232b25fa07abc981a872599237fdc42f1f77f6f511055612277304ee9a',
-    ].indexOf(t.id) !== -1);
+    return fullTurrets;
 }
 
 async function getImmunityRemainingEpochs(turretId: string, characterId: number, sender: string) {
