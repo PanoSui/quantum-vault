@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Transaction } from "@mysten/sui/transactions";
 import { queryKeys } from "@/constants/queryKeys";
 import {
+    ORIGINAL_WORLD_PACKAGE_ID,
     PACKAGE_ID, WORLD_PACKAGE_ID,
 } from "@/constants/contracts";
 import {useMyCharacter} from "@/hooks/useCharacter.ts";
@@ -14,7 +15,7 @@ export function useRegisterBribeTurret() {
     const client = useCurrentClient();
     const account = useCurrentAccount();
     const queryClient = useQueryClient();
-    const {character} = useMyCharacter();
+    const {data: character} = useMyCharacter();
 
     return useMutation({
         mutationFn: async (turret: Turret) => {
@@ -26,7 +27,7 @@ export function useRegisterBribeTurret() {
 
             const [ownerCap, receipt] = tx.moveCall({
                 target: `${WORLD_PACKAGE_ID}::character::borrow_owner_cap`,
-                typeArguments: [`${WORLD_PACKAGE_ID}::turret::Turret`],
+                typeArguments: [`${ORIGINAL_WORLD_PACKAGE_ID}::turret::Turret`],
                 arguments: [tx.object(character.id), tx.object(turret.owner_cap_id)],
             });
 
@@ -38,7 +39,7 @@ export function useRegisterBribeTurret() {
 
             tx.moveCall({
                 target: `${WORLD_PACKAGE_ID}::character::return_owner_cap`,
-                typeArguments: [`${WORLD_PACKAGE_ID}::turret::Turret`],
+                typeArguments: [`${ORIGINAL_WORLD_PACKAGE_ID}::turret::Turret`],
                 arguments: [tx.object(character.id), ownerCap, receipt],
             });
 

@@ -10,12 +10,11 @@ export function useMyCharacter() {
   return useQuery({
     queryKey: queryKeys.myCharacter,
     queryFn: async (): Promise<CharacterInfo | null | undefined> => {
-      const res = await getCharacterOwnedObjects("0x29938ce12b89f42b69ba86a38df6deb73cec8de237130bd20d8a3e14f01fb98d")
-      // TODO: Uncomment
-      // const res = await getCharacterOwnedObjects(account!.address)
-      return res && parseCharacterFromJson(res[0]);
+      const res = await getCharacterOwnedObjects(account!.address)
+      const car = res?.find((c) => c.character_address)
+      return car && parseCharacterFromJson(car);
     },
     enabled: !!account,
-    // staleTime: 10000
+    staleTime: 10000
   });
 }

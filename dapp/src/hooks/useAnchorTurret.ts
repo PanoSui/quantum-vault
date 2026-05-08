@@ -18,7 +18,7 @@ export function useAnchorTurret() {
     const queryClient = useQueryClient();
     const networkNodeId = useNetworkNode();
     const locationHash = useLocationHash();
-    const {character} = useMyCharacter();
+    const {data: character} = useMyCharacter();
 
     return useMutation({
         mutationFn: async () => {

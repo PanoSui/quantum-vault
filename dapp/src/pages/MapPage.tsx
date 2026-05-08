@@ -276,11 +276,7 @@ export function MapPage() {
       {placedTurrets.map(({ turret, x, y }) => {
         const isOffline =
           turret.status.status["@variant"].toLowerCase() === "offline";
-        const ringColor = turret.isMine
-          ? "#a78bfa"
-          : isOffline
-          ? "#f87171"
-          : "#60a5fa";
+        const ringColor = isOffline ? "#f87171" : "#60a5fa";
         const isHovered = hovered === turret.id;
 
         return (
@@ -315,11 +311,6 @@ export function MapPage() {
                     <span className="font-mono text-slate-100 font-semibold">
                       {turret.id.slice(0, 6)}...{turret.id.slice(-4)}
                     </span>
-                    {turret.isMine && (
-                      <span className="text-purple-400 font-semibold text-[10px] tracking-wider">
-                        YOURS
-                      </span>
-                    )}
                   </div>
                   <div className="text-slate-400">
                     Item ID:{" "}
@@ -481,10 +472,6 @@ export function MapPage() {
       })}
 
       <div className="absolute bottom-4 left-4 bg-slate-950/80 backdrop-blur border border-slate-700 rounded-lg p-3 text-xs flex flex-col gap-2 shadow-xl">
-        <div className="flex items-center gap-2 text-slate-300">
-          <span className="inline-block w-3 h-3 rounded-full bg-purple-400" />
-          Yours
-        </div>
         <div className="flex items-center gap-2 text-slate-300">
           <span className="inline-block w-3 h-3 rounded-full bg-blue-400" />
           Online

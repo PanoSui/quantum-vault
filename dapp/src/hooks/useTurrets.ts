@@ -10,7 +10,7 @@ import {
 } from "@/constants/contracts";
 import {Turret} from "@/types/turret.ts";
 import {useMyCharacter} from "@/hooks/useCharacter.ts";
-import type {CharacterInfo} from "@evefrontier/dapp-kit";
+import {CharacterInfo, getCharacterOwnedObjects} from "@evefrontier/dapp-kit";
 import {Transaction} from "@mysten/sui/transactions";
 import {env} from "@/config/env.ts";
 import {getJsonRpcFullnodeUrl, SuiJsonRpcClient} from "@mysten/sui/jsonRpc";
@@ -94,16 +94,22 @@ async function _fetchTurrets(client: SuiGraphQLClient): Promise<Turret[]> {
     return turrets;
 }
 
-async function fetchTurrets(client: SuiGraphQLClient, character?: CharacterInfo | null): Promise<Turret[]> {
+async function fetchTurrets(client: SuiGraphQLClient, character?: CharacterInfo | null, accountAddress?: string): Promise<Turret[]> {
     let turrets = await _fetchTurrets(client);
+    const res = accountAddress ? await getCharacterOwnedObjects(accountAddress) : []
+
+    const myTurretIds = res?.filter((t) => {
+        console.log(t);
+    })
 
     turrets = turrets.filter((t) => t)
 
     const fullTurrets: Turret[] = []
     for(const turret of turrets) {
-        turret.isBribable = `0x${turret.extension?.name}` === `${PACKAGE_ID}::quantum_turret::QuantumTurretAuth`
-        turret.isSniper = `0x${turret.extension?.name}` === `${PACKAGE_ID}::snipper_turret::SniperTurretAuth`
-        turret.isMine = character?._raw?.owner_cap_id === turret.owner_cap_id
+        turret.isBribable = `0x${turret.extension}` === `${PACKAGE_ID}::quantum_turret::QuantumTurretAuth`
+        turret.isSniper = `0x${turret.extension}` === `${PACKAGE_ID}::sniper_turret::SniperTurretAuth`
+        // turret.isMine = character?._raw?.owner_cap_id === turret.owner_cap_id
+        // turret.isMine = true
 
         if (turret.isBribable && character?.address) {
             turret.remainingDays = await getImmunityRemainingEpochs(turret.id, character.characterId, character.address)
@@ -157,7 +163,7 @@ export function useTurrets() {
 
     return useQuery({
         queryKey: queryKeys.turrets.list(character?.id ?? ""),
-        queryFn: () => fetchTurrets(client, character),
+        queryFn: () => fetchTurrets(client, character, currentAccount?.address),
         enabled: !!currentAccount && !isLoading && !!character?.id,
         // staleTime: 10000
     });
