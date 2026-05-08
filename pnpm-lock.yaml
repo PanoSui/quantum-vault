@@ -14,25 +14,25 @@ importers:
         specifier: ^0.1.9
         version: 0.1.9(@types/react@19.2.14)(typescript@5.9.3)
       '@mysten/dapp-kit-react':
-        specifier: ^2.0.0
-        version: 2.0.1(@mysten/sui@2.16.0(typescript@5.9.3))(@types/react@19.2.14)(react@19.2.6)(typescript@5.9.3)
+        specifier: ^2.0.3
+        version: 2.0.3(@mysten/sui@2.16.2(typescript@5.9.3))(@types/react@19.2.14)(react@19.2.6)(typescript@5.9.3)
       '@mysten/sui':
-        specifier: ^2.5.0
-        version: 2.16.0(typescript@5.9.3)
+        specifier: ^2.16.2
+        version: 2.16.2(typescript@5.9.3)
       '@mysten/walrus':
-        specifier: ^1.0.3
-        version: 1.1.4(@mysten/sui@2.16.0(typescript@5.9.3))
+        specifier: ^1.1.6
+        version: 1.1.6(@mysten/sui@2.16.2(typescript@5.9.3))
       '@mysten/walrus-wasm':
-        specifier: ^0.2.0
-        version: 0.2.0
+        specifier: ^0.2.2
+        version: 0.2.2
       '@nanostores/react':
-        specifier: ^1.0.0
+        specifier: ^1.1.0
         version: 1.1.0(nanostores@1.3.0)(react@19.2.6)
       '@radix-ui/react-dropdown-menu':
         specifier: ^2.1.16
         version: 2.1.16(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@tanstack/react-query':
-        specifier: ^5.96.2
+        specifier: ^5.100.9
         version: 5.100.9(react@19.2.6)
       class-variance-authority:
         specifier: ^0.7.1
@@ -47,30 +47,30 @@ importers:
         specifier: ^1.4.3
         version: 1.4.3(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       react:
-        specifier: ^19.2.3
+        specifier: ^19.2.6
         version: 19.2.6
       react-dom:
-        specifier: ^19.2.3
+        specifier: ^19.2.6
         version: 19.2.6(react@19.2.6)
       react-router:
-        specifier: ^7.13.1
+        specifier: ^7.15.0
         version: 7.15.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       sonner:
         specifier: ^2.0.7
         version: 2.0.7(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       tailwind-merge:
-        specifier: ^3.4.0
+        specifier: ^3.5.0
         version: 3.5.0
       tw-animate-css:
         specifier: ^1.4.0
         version: 1.4.0
       zod:
-        specifier: ^4.3.6
+        specifier: ^4.4.3
         version: 4.4.3
     devDependencies:
       '@tailwindcss/vite':
         specifier: ^4.2.4
-        version: 4.2.4(vite@7.3.2(@types/node@25.6.0)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.21.0))
+        version: 4.2.4(vite@7.3.3(@types/node@25.6.0)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.21.0))
       '@types/react':
         specifier: ^19.2.14
         version: 19.2.14
@@ -79,7 +79,7 @@ importers:
         version: 19.2.3(@types/react@19.2.14)
       '@vitejs/plugin-react-swc':
         specifier: ^4.3.0
-        version: 4.3.0(vite@7.3.2(@types/node@25.6.0)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.21.0))
+        version: 4.3.0(vite@7.3.3(@types/node@25.6.0)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.21.0))
       prettier:
         specifier: ^3.8.3
         version: 3.8.3
@@ -90,8 +90,8 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
       vite:
-        specifier: ^7.3.2
-        version: 7.3.2(@types/node@25.6.0)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.21.0)
+        specifier: ^7.3.3
+        version: 7.3.3(@types/node@25.6.0)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.21.0)
 
   move:
     dependencies:
@@ -135,7 +135,7 @@ importers:
         version: 4.21.0
       vitest:
         specifier: ^4.1.5
-        version: 4.1.5(@types/node@25.6.0)(vite@7.3.2(@types/node@25.6.0)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.21.0))
+        version: 4.1.5(@types/node@25.6.0)(vite@7.3.3(@types/node@25.6.0)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.21.0))
 
 packages:
 
@@ -425,13 +425,16 @@ packages:
   '@mysten/bcs@2.0.3':
     resolution: {integrity: sha512-dwcaL4HNAsEGpU3hKUAsXgCZp9l6++e2A3THpzoYZ8e7bsy4XH1V0dXD5dIzgNcVZiZfb6ZnDMG+gdF6+1WOQA==}
 
-  '@mysten/dapp-kit-core@1.3.0':
-    resolution: {integrity: sha512-T3/wfVzuufH9QYwqeCwG5ei6/NQX+4mjcX4OJ6QBs7cLJlV6MZFl+ue0RzGnGvG0QtSxfBAxkiqbFHLIvWWnWg==}
-    peerDependencies:
-      '@mysten/sui': ^2.15.0
+  '@mysten/bcs@2.0.5':
+    resolution: {integrity: sha512-Dop9Xq36DPLlsmIDQZvUg4uJeBBxIGirgp2OXGaEff+mtLKFBoW2HnE3aSTSSpiMQH9XRhjwtiM16zFJhFqz0Q==}
 
-  '@mysten/dapp-kit-react@2.0.1':
-    resolution: {integrity: sha512-kfI2fxeF+2KgYXTa8ZK7kUFF/ZuAoPKBn500Y2uQnhmD8HX8IBTouHB1DANUkUpxUK/F85Cb9/yP3dD2M674UA==}
+  '@mysten/dapp-kit-core@1.3.2':
+    resolution: {integrity: sha512-0IaIDydmJBEVpXSBeR6As3Tx0PzNyKfp4jXlUHkLFiagn3ln+16ai7rsCrgzLna4XCB3EaO+pM6uzClUDTrLng==}
+    peerDependencies:
+      '@mysten/sui': ^2.16.2
+
+  '@mysten/dapp-kit-react@2.0.3':
+    resolution: {integrity: sha512-HxRDG6vWDPCg9gmRhXh0gdzU9DVco07eNaL9psHIH23I5ggRo5dPcTtjdSSGTSo/ouYqr9W+JZf4Ao9R+5/q4g==}
     peerDependencies:
       '@types/react': '>=17.0.0'
       react: '>=17.0.0'
@@ -440,13 +443,17 @@ packages:
     resolution: {integrity: sha512-PkYZkaH14OAy4S10o4SLl0odGgDHiaILEADiU06gj/MzYZAYq3wh4uCZCO8haX/Xyh2p6NfVy1sihMnUmRnE1g==}
     hasBin: true
 
-  '@mysten/slush-wallet@1.0.3':
-    resolution: {integrity: sha512-TF1CXXug5VPaV4KImKxZ7nyR0XY//KJVzOFxFXaajBHewLBinCO7s6GS9EYbtQMaNvnjrYQn1cpGhYfwGkzvtQ==}
+  '@mysten/slush-wallet@1.0.5':
+    resolution: {integrity: sha512-soP0eZW4uP2S2z5YH7eg0dZQZ7hZyY6F7D2H0Wv93wjFz9DSHlOf1b9mY+2kzH1oO7nSnpdRdL15v8+X3X7f6w==}
     peerDependencies:
-      '@mysten/sui': ^2.8.0
+      '@mysten/sui': ^2.16.2
 
   '@mysten/sui@2.16.0':
     resolution: {integrity: sha512-xnf3e3uIuJGzIVEBLEl372Xk51CB45CP2ZlXXLSnWHH1MI0xIpko10JSQ44ohde9XhxygAy1jz26rkrlCgDGXQ==}
+    engines: {node: '>=22'}
+
+  '@mysten/sui@2.16.2':
+    resolution: {integrity: sha512-WUTY3ATXGjzdkTHArNBQy8kRTGY4Rm0K5lZ98wBe5jbrBriF9VSHp87oqQ3egIBM5eNo0ENLkWXBguAK0ge64Q==}
     engines: {node: '>=22'}
 
   '@mysten/sui@2.6.0':
@@ -456,21 +463,24 @@ packages:
   '@mysten/utils@0.3.1':
     resolution: {integrity: sha512-36KhxG284uhDdSnlkyNaS6fzKTX9FpP2WQWOwUKIRsqQFFIm2ooCf2TP1IuqrtMpkairwpiWkAS0eg7cpemVzg==}
 
-  '@mysten/wallet-standard@0.20.1':
-    resolution: {integrity: sha512-Q2GoXO1SPLayqunNIWI3VT8cyOVGTFAPUvaCzx7jYIEoZBfyCR5RCUS4/ehgAlApF88Y/1c/OfjBvEoeRi76jw==}
+  '@mysten/utils@0.3.3':
+    resolution: {integrity: sha512-gVHn5toh24eXXLEyBknwwM2F/tbDgqPX0yj77KtHjuoYUallcQ9vSwGfGsAy39IcTB259Yprt/ZOEwdup+zrpA==}
+
+  '@mysten/wallet-standard@0.20.3':
+    resolution: {integrity: sha512-Kp1EpWaQAwANuMoTCJKVdZnEOaE9aJ5PPvIC7qg+J3u6Uf20VsVsQngZllyaS2OQHm+iLlJzcLXHff7ttvQJYw==}
     peerDependencies:
       '@mysten/sui': '*'
 
-  '@mysten/walrus-wasm@0.2.0':
-    resolution: {integrity: sha512-QYZoS6CIoFnVxqYClXkwgeoUjnNUyPdXwoD1Re4Xo/TVdXXmpH46akodNJ+e6egUSrjzHgeiRgfAuq57sDXGNA==}
+  '@mysten/walrus-wasm@0.2.2':
+    resolution: {integrity: sha512-MbI1OAYvnlcdYo3hhSPgMra4Loiox32gI13aP+EpC1pjVxkIRnINzM2FcUgu1PIrl/L49O6f+latQm0vcCGXiQ==}
 
-  '@mysten/walrus@1.1.4':
-    resolution: {integrity: sha512-NRfMQL66ZI7qKsJk5T1UO16Nf+cQM8qZlpVNlx1BcNgA63eLboRNeMcmb9nn4Pfrq7eW+mT2WPL+OBmqvjSHuA==}
+  '@mysten/walrus@1.1.6':
+    resolution: {integrity: sha512-/IuEUHHBdjlQEXZfjet1G2+gcStruxbm69UWJFZEFjljGhMXRboN1iPYjVP3kK7Vfr5cWKs7uVKjMbULzV/r/A==}
     peerDependencies:
-      '@mysten/sui': ^2.16.0
+      '@mysten/sui': ^2.16.2
 
-  '@mysten/window-wallet-core@0.1.4':
-    resolution: {integrity: sha512-LK1t5dJQZUJv0fF/Cj8HS8N9HHaa7cAOcdWfPAFuYvgVJMEr9K/p33ldqiflcn6p1d53uTtUH9kA5/lQlTmZ2A==}
+  '@mysten/window-wallet-core@0.1.6':
+    resolution: {integrity: sha512-vKx4RVn+6sfMHnoFIK3hJ3pxYcy88FdW+BjaFp8GpcGCXC0ImK0HTLNPC0JxeQWmjgDe1eXIMPpY9/eAMU9Azw==}
 
   '@nanostores/lit@0.2.3':
     resolution: {integrity: sha512-hIUKzdNrgKXkXCsppzQxmYYYMTn96cncijWhzcYZKn3Yimqj7B6YK94qN/KObjBNEe0xR3JLgMo96ew5fVtW2w==}
@@ -1727,8 +1737,8 @@ packages:
     resolution: {integrity: sha512-nI4U3TottKAcAD9LLud4Cb7b2QztQMUEfHbvhTH09bqXTxnSie8WnjPALV/WMCrJZ6UV/qHJ6L03OqO3LcdYZw==}
     engines: {node: '>=12'}
 
-  enhanced-resolve@5.21.0:
-    resolution: {integrity: sha512-otxSQPw4lkOZWkHpB3zaEQs6gWYEsmX4xQF68ElXC/TWvGxGMSGOvoNbaLXm6/cS/fSfHtsEdw90y20PCd+sCA==}
+  enhanced-resolve@5.21.2:
+    resolution: {integrity: sha512-xe9vQb5kReirPUxgQrXA3ihgbCqssmTiM7cOZ+Gzu+VeGWgpV98lLZvp0dl4yriyAePcewxGUs9UpKD8PET9KQ==}
     engines: {node: '>=10.13.0'}
 
   es-module-lexer@2.1.0:
@@ -1796,6 +1806,10 @@ packages:
 
   graphql@16.13.2:
     resolution: {integrity: sha512-5bJ+nf/UCpAjHM8i06fl7eLyVC9iuNAjm9qzkiu2ZGhM0VscSvS6WDPfAwkdkBuoXGM9FJSbKl6wylMwP9Ktig==}
+    engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
+
+  graphql@16.14.0:
+    resolution: {integrity: sha512-BBvQ/406p+4CZbTpCbVPSxfzrZrbnuWSP1ELYgyS6B+hNeKzgrdB4JczCa5VZUBQrDa9hUngm0KnexY6pJRN5Q==}
     engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
 
   isexe@2.0.0:
@@ -2147,8 +2161,8 @@ packages:
       typescript:
         optional: true
 
-  vite@7.3.2:
-    resolution: {integrity: sha512-Bby3NOsna2jsjfLVOHKes8sGwgl4TT0E6vvpYgnAYDIF/tie7MRaFthmKuHx1NSXjiTueXH3do80FMQgvEktRg==}
+  vite@7.3.3:
+    resolution: {integrity: sha512-/4XH147Ui7OGTjg3HbdWe5arnZQSbfuRzdr9Ec7TQi5I7R+ir0Rlc9GIvD4v0XZurELqA035KVXJXpR61xhiTA==}
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
     peerDependencies:
@@ -2258,6 +2272,10 @@ snapshots:
     optionalDependencies:
       graphql: 16.13.2
 
+  '@0no-co/graphql.web@1.2.0(graphql@16.14.0)':
+    optionalDependencies:
+      graphql: 16.14.0
+
   '@0no-co/graphqlsp@1.15.2(graphql@16.13.1)(typescript@5.9.3)':
     dependencies:
       '@gql.tada/internal': 1.0.8(graphql@16.13.1)(typescript@5.9.3)
@@ -2268,6 +2286,12 @@ snapshots:
     dependencies:
       '@gql.tada/internal': 1.0.9(graphql@16.13.2)(typescript@5.9.3)
       graphql: 16.13.2
+      typescript: 5.9.3
+
+  '@0no-co/graphqlsp@1.15.4(graphql@16.14.0)(typescript@5.9.3)':
+    dependencies:
+      '@gql.tada/internal': 1.0.9(graphql@16.14.0)(typescript@5.9.3)
+      graphql: 16.14.0
       typescript: 5.9.3
 
   '@easysui/sdk@1.2.1(@mysten/sui@2.16.0(typescript@5.9.3))':
@@ -2358,10 +2382,10 @@ snapshots:
 
   '@evefrontier/dapp-kit@0.1.9(@types/react@19.2.14)(typescript@5.9.3)':
     dependencies:
-      '@mysten/dapp-kit-core': 1.3.0(@mysten/sui@2.16.0(typescript@5.9.3))(typescript@5.9.3)
-      '@mysten/dapp-kit-react': 2.0.1(@mysten/sui@2.16.0(typescript@5.9.3))(@types/react@19.2.14)(react@19.2.6)(typescript@5.9.3)
-      '@mysten/sui': 2.16.0(typescript@5.9.3)
-      '@mysten/wallet-standard': 0.20.1(@mysten/sui@2.16.0(typescript@5.9.3))
+      '@mysten/dapp-kit-core': 1.3.2(@mysten/sui@2.16.2(typescript@5.9.3))(typescript@5.9.3)
+      '@mysten/dapp-kit-react': 2.0.3(@mysten/sui@2.16.2(typescript@5.9.3))(@types/react@19.2.14)(react@19.2.6)(typescript@5.9.3)
+      '@mysten/sui': 2.16.2(typescript@5.9.3)
+      '@mysten/wallet-standard': 0.20.3(@mysten/sui@2.16.2(typescript@5.9.3))
       '@tanstack/react-query': 5.100.9(react@19.2.6)
       react: 19.2.6
     transitivePeerDependencies:
@@ -2401,6 +2425,13 @@ snapshots:
       graphql: 16.13.2
       typescript: 5.9.3
 
+  '@gql.tada/cli-utils@1.7.3(@0no-co/graphqlsp@1.15.4(graphql@16.14.0)(typescript@5.9.3))(graphql@16.14.0)(typescript@5.9.3)':
+    dependencies:
+      '@0no-co/graphqlsp': 1.15.4(graphql@16.14.0)(typescript@5.9.3)
+      '@gql.tada/internal': 1.0.9(graphql@16.14.0)(typescript@5.9.3)
+      graphql: 16.14.0
+      typescript: 5.9.3
+
   '@gql.tada/internal@1.0.8(graphql@16.13.1)(typescript@5.9.3)':
     dependencies:
       '@0no-co/graphql.web': 1.2.0(graphql@16.13.1)
@@ -2413,6 +2444,12 @@ snapshots:
       graphql: 16.13.2
       typescript: 5.9.3
 
+  '@gql.tada/internal@1.0.9(graphql@16.14.0)(typescript@5.9.3)':
+    dependencies:
+      '@0no-co/graphql.web': 1.2.0(graphql@16.14.0)
+      graphql: 16.14.0
+      typescript: 5.9.3
+
   '@graphql-typed-document-node/core@3.2.0(graphql@16.13.1)':
     dependencies:
       graphql: 16.13.1
@@ -2420,6 +2457,10 @@ snapshots:
   '@graphql-typed-document-node/core@3.2.0(graphql@16.13.2)':
     dependencies:
       graphql: 16.13.2
+
+  '@graphql-typed-document-node/core@3.2.0(graphql@16.14.0)':
+    dependencies:
+      graphql: 16.14.0
 
   '@jridgewell/gen-mapping@0.3.13':
     dependencies:
@@ -2469,15 +2510,20 @@ snapshots:
       '@mysten/utils': 0.3.1
       '@scure/base': 2.2.0
 
-  '@mysten/dapp-kit-core@1.3.0(@mysten/sui@2.16.0(typescript@5.9.3))(typescript@5.9.3)':
+  '@mysten/bcs@2.0.5':
+    dependencies:
+      '@mysten/utils': 0.3.3
+      '@scure/base': 2.2.0
+
+  '@mysten/dapp-kit-core@1.3.2(@mysten/sui@2.16.2(typescript@5.9.3))(typescript@5.9.3)':
     dependencies:
       '@floating-ui/dom': 1.7.6
       '@lit-labs/scoped-registry-mixin': 1.0.4
       '@lit/task': 1.0.3
-      '@mysten/slush-wallet': 1.0.3(@mysten/sui@2.16.0(typescript@5.9.3))(typescript@5.9.3)
-      '@mysten/sui': 2.16.0(typescript@5.9.3)
-      '@mysten/utils': 0.3.1
-      '@mysten/wallet-standard': 0.20.1(@mysten/sui@2.16.0(typescript@5.9.3))
+      '@mysten/slush-wallet': 1.0.5(@mysten/sui@2.16.2(typescript@5.9.3))(typescript@5.9.3)
+      '@mysten/sui': 2.16.2(typescript@5.9.3)
+      '@mysten/utils': 0.3.3
+      '@mysten/wallet-standard': 0.20.3(@mysten/sui@2.16.2(typescript@5.9.3))
       '@nanostores/lit': 0.2.3(lit@3.3.2)(nanostores@1.3.0)
       '@wallet-standard/ui': 1.0.2
       '@wallet-standard/ui-registry': 1.1.0
@@ -2487,10 +2533,10 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
-  '@mysten/dapp-kit-react@2.0.1(@mysten/sui@2.16.0(typescript@5.9.3))(@types/react@19.2.14)(react@19.2.6)(typescript@5.9.3)':
+  '@mysten/dapp-kit-react@2.0.3(@mysten/sui@2.16.2(typescript@5.9.3))(@types/react@19.2.14)(react@19.2.6)(typescript@5.9.3)':
     dependencies:
       '@lit/react': 1.0.8(@types/react@19.2.14)
-      '@mysten/dapp-kit-core': 1.3.0(@mysten/sui@2.16.0(typescript@5.9.3))(typescript@5.9.3)
+      '@mysten/dapp-kit-core': 1.3.2(@mysten/sui@2.16.2(typescript@5.9.3))(typescript@5.9.3)
       '@nanostores/react': 1.1.0(nanostores@1.3.0)(react@19.2.6)
       '@types/react': 19.2.14
       nanostores: 1.3.0
@@ -2504,12 +2550,12 @@ snapshots:
       prettier: 3.8.1
       web-tree-sitter: 0.20.8
 
-  '@mysten/slush-wallet@1.0.3(@mysten/sui@2.16.0(typescript@5.9.3))(typescript@5.9.3)':
+  '@mysten/slush-wallet@1.0.5(@mysten/sui@2.16.2(typescript@5.9.3))(typescript@5.9.3)':
     dependencies:
-      '@mysten/sui': 2.16.0(typescript@5.9.3)
-      '@mysten/utils': 0.3.1
-      '@mysten/wallet-standard': 0.20.1(@mysten/sui@2.16.0(typescript@5.9.3))
-      '@mysten/window-wallet-core': 0.1.4(typescript@5.9.3)
+      '@mysten/sui': 2.16.2(typescript@5.9.3)
+      '@mysten/utils': 0.3.3
+      '@mysten/wallet-standard': 0.20.3(@mysten/sui@2.16.2(typescript@5.9.3))
+      '@mysten/window-wallet-core': 0.1.6(typescript@5.9.3)
       valibot: 1.4.0(typescript@5.9.3)
     transitivePeerDependencies:
       - typescript
@@ -2531,6 +2577,28 @@ snapshots:
       graphql: 16.13.2
       poseidon-lite: 0.2.1
       valibot: 1.3.1(typescript@5.9.3)
+    transitivePeerDependencies:
+      - '@gql.tada/svelte-support'
+      - '@gql.tada/vue-support'
+      - typescript
+
+  '@mysten/sui@2.16.2(typescript@5.9.3)':
+    dependencies:
+      '@graphql-typed-document-node/core': 3.2.0(graphql@16.14.0)
+      '@mysten/bcs': 2.0.5
+      '@mysten/utils': 0.3.3
+      '@noble/curves': 2.2.0
+      '@noble/hashes': 2.2.0
+      '@protobuf-ts/grpcweb-transport': 2.11.1
+      '@protobuf-ts/runtime': 2.11.1
+      '@protobuf-ts/runtime-rpc': 2.11.1
+      '@scure/base': 2.2.0
+      '@scure/bip32': 2.2.0
+      '@scure/bip39': 2.2.0
+      gql.tada: 1.9.2(graphql@16.14.0)(typescript@5.9.3)
+      graphql: 16.14.0
+      poseidon-lite: 0.2.1
+      valibot: 1.4.0(typescript@5.9.3)
     transitivePeerDependencies:
       - '@gql.tada/svelte-support'
       - '@gql.tada/vue-support'
@@ -2562,24 +2630,28 @@ snapshots:
     dependencies:
       '@scure/base': 2.0.0
 
-  '@mysten/wallet-standard@0.20.1(@mysten/sui@2.16.0(typescript@5.9.3))':
+  '@mysten/utils@0.3.3':
     dependencies:
-      '@mysten/sui': 2.16.0(typescript@5.9.3)
+      '@scure/base': 2.2.0
+
+  '@mysten/wallet-standard@0.20.3(@mysten/sui@2.16.2(typescript@5.9.3))':
+    dependencies:
+      '@mysten/sui': 2.16.2(typescript@5.9.3)
       '@wallet-standard/core': 1.1.1
 
-  '@mysten/walrus-wasm@0.2.0': {}
+  '@mysten/walrus-wasm@0.2.2': {}
 
-  '@mysten/walrus@1.1.4(@mysten/sui@2.16.0(typescript@5.9.3))':
+  '@mysten/walrus@1.1.6(@mysten/sui@2.16.2(typescript@5.9.3))':
     dependencies:
-      '@mysten/bcs': 2.0.3
-      '@mysten/sui': 2.16.0(typescript@5.9.3)
-      '@mysten/utils': 0.3.1
-      '@mysten/walrus-wasm': 0.2.0
+      '@mysten/bcs': 2.0.5
+      '@mysten/sui': 2.16.2(typescript@5.9.3)
+      '@mysten/utils': 0.3.3
+      '@mysten/walrus-wasm': 0.2.2
       dataloader: 2.2.3
 
-  '@mysten/window-wallet-core@0.1.4(typescript@5.9.3)':
+  '@mysten/window-wallet-core@0.1.6(typescript@5.9.3)':
     dependencies:
-      '@mysten/utils': 0.3.1
+      '@mysten/utils': 0.3.3
       jose: 6.2.3
       valibot: 1.4.0(typescript@5.9.3)
     transitivePeerDependencies:
@@ -3533,7 +3605,7 @@ snapshots:
   '@tailwindcss/node@4.2.4':
     dependencies:
       '@jridgewell/remapping': 2.3.5
-      enhanced-resolve: 5.21.0
+      enhanced-resolve: 5.21.2
       jiti: 2.7.0
       lightningcss: 1.32.0
       magic-string: 0.30.21
@@ -3591,12 +3663,12 @@ snapshots:
       '@tailwindcss/oxide-win32-arm64-msvc': 4.2.4
       '@tailwindcss/oxide-win32-x64-msvc': 4.2.4
 
-  '@tailwindcss/vite@4.2.4(vite@7.3.2(@types/node@25.6.0)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.21.0))':
+  '@tailwindcss/vite@4.2.4(vite@7.3.3(@types/node@25.6.0)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.21.0))':
     dependencies:
       '@tailwindcss/node': 4.2.4
       '@tailwindcss/oxide': 4.2.4
       tailwindcss: 4.2.4
-      vite: 7.3.2(@types/node@25.6.0)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.21.0)
+      vite: 7.3.3(@types/node@25.6.0)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.21.0)
 
   '@tanstack/query-core@5.100.9': {}
 
@@ -3628,11 +3700,11 @@ snapshots:
 
   '@types/trusted-types@2.0.7': {}
 
-  '@vitejs/plugin-react-swc@4.3.0(vite@7.3.2(@types/node@25.6.0)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.21.0))':
+  '@vitejs/plugin-react-swc@4.3.0(vite@7.3.3(@types/node@25.6.0)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.21.0))':
     dependencies:
       '@rolldown/pluginutils': 1.0.0-rc.7
       '@swc/core': 1.15.33
-      vite: 7.3.2(@types/node@25.6.0)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.21.0)
+      vite: 7.3.3(@types/node@25.6.0)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.21.0)
     transitivePeerDependencies:
       - '@swc/helpers'
 
@@ -3645,13 +3717,13 @@ snapshots:
       chai: 6.2.2
       tinyrainbow: 3.1.0
 
-  '@vitest/mocker@4.1.5(vite@7.3.2(@types/node@25.6.0)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.21.0))':
+  '@vitest/mocker@4.1.5(vite@7.3.3(@types/node@25.6.0)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.21.0))':
     dependencies:
       '@vitest/spy': 4.1.5
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: 7.3.2(@types/node@25.6.0)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.21.0)
+      vite: 7.3.3(@types/node@25.6.0)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.21.0)
 
   '@vitest/pretty-format@4.1.5':
     dependencies:
@@ -3780,7 +3852,7 @@ snapshots:
 
   dotenv@17.4.2: {}
 
-  enhanced-resolve@5.21.0:
+  enhanced-resolve@5.21.2:
     dependencies:
       graceful-fs: 4.2.11
       tapable: 2.3.3
@@ -3868,11 +3940,25 @@ snapshots:
       - '@gql.tada/vue-support'
       - graphql
 
+  gql.tada@1.9.2(graphql@16.14.0)(typescript@5.9.3):
+    dependencies:
+      '@0no-co/graphql.web': 1.2.0(graphql@16.14.0)
+      '@0no-co/graphqlsp': 1.15.4(graphql@16.14.0)(typescript@5.9.3)
+      '@gql.tada/cli-utils': 1.7.3(@0no-co/graphqlsp@1.15.4(graphql@16.14.0)(typescript@5.9.3))(graphql@16.14.0)(typescript@5.9.3)
+      '@gql.tada/internal': 1.0.9(graphql@16.14.0)(typescript@5.9.3)
+      typescript: 5.9.3
+    transitivePeerDependencies:
+      - '@gql.tada/svelte-support'
+      - '@gql.tada/vue-support'
+      - graphql
+
   graceful-fs@4.2.11: {}
 
   graphql@16.13.1: {}
 
   graphql@16.13.2: {}
+
+  graphql@16.14.0: {}
 
   isexe@2.0.0: {}
 
@@ -4211,7 +4297,7 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.3
 
-  vite@7.3.2(@types/node@25.6.0)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.21.0):
+  vite@7.3.3(@types/node@25.6.0)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.21.0):
     dependencies:
       esbuild: 0.27.7
       fdir: 6.5.0(picomatch@4.0.4)
@@ -4226,10 +4312,10 @@ snapshots:
       lightningcss: 1.32.0
       tsx: 4.21.0
 
-  vitest@4.1.5(@types/node@25.6.0)(vite@7.3.2(@types/node@25.6.0)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.21.0)):
+  vitest@4.1.5(@types/node@25.6.0)(vite@7.3.3(@types/node@25.6.0)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.21.0)):
     dependencies:
       '@vitest/expect': 4.1.5
-      '@vitest/mocker': 4.1.5(vite@7.3.2(@types/node@25.6.0)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.21.0))
+      '@vitest/mocker': 4.1.5(vite@7.3.3(@types/node@25.6.0)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.21.0))
       '@vitest/pretty-format': 4.1.5
       '@vitest/runner': 4.1.5
       '@vitest/snapshot': 4.1.5
@@ -4246,7 +4332,7 @@ snapshots:
       tinyexec: 1.1.2
       tinyglobby: 0.2.16
       tinyrainbow: 3.1.0
-      vite: 7.3.2(@types/node@25.6.0)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.21.0)
+      vite: 7.3.3(@types/node@25.6.0)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.21.0)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 25.6.0

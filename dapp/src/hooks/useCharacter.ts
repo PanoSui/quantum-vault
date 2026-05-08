@@ -1,5 +1,9 @@
 import {useCurrentAccount} from "@mysten/dapp-kit-react";
-import { getCharacterOwnedObjects, CharacterInfo, parseCharacterFromJson } from "@evefrontier/dapp-kit";
+import {
+  getCharacterOwnedObjects,
+  CharacterInfo,
+  parseCharacterFromJson,
+} from "@evefrontier/dapp-kit";
 import {queryKeys} from "@/constants/queryKeys";
 import { useQuery } from "@tanstack/react-query";
 

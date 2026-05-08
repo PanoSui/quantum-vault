@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { explorerUrl } from "@/lib/explorer";
 
 export function MyCharacter() {
-  const { character, isLoading, error } = useMyCharacter();
+  const { data: character, isLoading, error } = useMyCharacter();
 
   if (isLoading) {
     return (
@@ -68,11 +68,11 @@ export function MyCharacter() {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {character.metadata.url && (
+          {character._raw?.metadata.url && (
             <div className="flex justify-center">
               <img
-                src={character.metadata.url}
-                alt={character.metadata.name}
+                src={character._raw?.metadata.url}
+                alt={character.name}
                 className="h-32 w-32 rounded-lg object-cover border-2 border-slate-700"
               />
             </div>
@@ -81,11 +81,11 @@ export function MyCharacter() {
           <div className="space-y-3">
             <div className="text-center">
               <h3 className="text-2xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                {character.metadata.name}
+                {character.name}
               </h3>
-              {character.metadata.description && (
+              {character._raw?.metadata.description && (
                 <p className="text-sm text-slate-400 mt-1">
-                  {character.metadata.description}
+                  {character._raw?.metadata.description}
                 </p>
               )}
             </div>
@@ -93,7 +93,7 @@ export function MyCharacter() {
             <div className="space-y-2 text-sm">
               <div className="flex justify-between items-center p-2 bg-slate-800/50 rounded">
                 <span className="text-slate-400">Tribe ID</span>
-                <span className="text-slate-300 font-mono">{character.tribe_id}</span>
+                <span className="text-slate-300 font-mono">{character.tribeId}</span>
               </div>
 
               <div className="flex justify-between items-center p-2 bg-slate-800/50 rounded">
