@@ -61,9 +61,15 @@ interface TurretsLookupResponse {
 const PAGE_SIZE = 50;
 const MAX_PAGES = 100;
 
-async function _fetchTurrets(client: SuiGraphQLClient): Promise<Turret[]> {
+async function _fetchTurrets(): Promise<Turret[]> {
     const turrets: Turret[] = [];
     let cursor: string | null = null;
+
+    const client = new SuiGraphQLClient({
+        network: env.VITE_SUI_NETWORK,
+        url: env.VITE_SUI_GRAPHQL_URL,
+    })
+
 
     for (let page = 0; page < MAX_PAGES; page++) {
         const result: GraphQLQueryResult<TurretsLookupResponse> =
@@ -94,10 +100,10 @@ async function _fetchTurrets(client: SuiGraphQLClient): Promise<Turret[]> {
     return turrets;
 }
 
-async function fetchTurrets(client: SuiGraphQLClient, character?: CharacterInfo | null, accountAddress?: string): Promise<Turret[]> {
+async function fetchTurrets(character?: CharacterInfo | null, accountAddress?: string): Promise<Turret[]> {
     let turrets: any = []
     if (!accountAddress) {
-        turrets = await _fetchTurrets(client);
+        turrets = await _fetchTurrets();
         turrets = turrets.filter((t: any) => t)
     } else {
         turrets = await getCharacterOwnedObjects(accountAddress)
@@ -152,15 +158,9 @@ export function useTurrets() {
     // const client = useCurrentClient() as SuiGraphQLClient;
     const {data: character, isLoading} = useMyCharacter();
 
-    const client = new SuiGraphQLClient({
-        network: env.VITE_SUI_NETWORK,
-        url: env.VITE_SUI_GRAPHQL_URL,
-    })
-
     return useQuery({
-        queryKey: queryKeys.turrets.list(character?.id ?? ""),
-        queryFn: () => fetchTurrets(client, character, currentAccount?.address),
+        queryKey: queryKeys.turrets.list(),
+        queryFn: () => fetchTurrets(character, currentAccount?.address),
         enabled: !!currentAccount && !isLoading && !!character?.id,
-        // staleTime: 10000
     });
 }

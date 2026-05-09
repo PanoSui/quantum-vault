@@ -1,4 +1,4 @@
-import {useCurrentAccount, useCurrentClient, useDAppKit} from "@mysten/dapp-kit-react";
+import {useCurrentClient, useDAppKit} from "@mysten/dapp-kit-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Transaction } from "@mysten/sui/transactions";
 import { queryKeys } from "@/constants/queryKeys";
@@ -14,17 +14,15 @@ import {useLocationHash} from "@/hooks/useLocation.ts";
 export function useAnchorTurret() {
     const dAppKit = useDAppKit();
     const client = useCurrentClient();
-    const account = useCurrentAccount();
     const queryClient = useQueryClient();
-    const networkNodeId = useNetworkNode();
+    const {data: networkNode} = useNetworkNode();
     const locationHash = useLocationHash();
     const {data: character} = useMyCharacter();
 
     return useMutation({
         mutationFn: async () => {
-            if (!character) {
-                return
-            }
+            if (!character) return
+            if (!networkNode) return
 
             const tx = new Transaction();
 
@@ -36,7 +34,7 @@ export function useAnchorTurret() {
                 target: `${WORLD_PACKAGE_ID}::turret::anchor`,
                 arguments: [
                     tx.object(env.VITE_OBJECT_REGISTRY),
-                    tx.object(networkNodeId),
+                    tx.object(networkNode.id),
                     tx.object(character.id),
                     tx.object(env.VITE_ADMIN_ACL),
                     tx.pure.u64(randomInt(1000, 10000000)),
@@ -60,7 +58,7 @@ export function useAnchorTurret() {
         },
         onSuccess: async (_data) => {
             await queryClient.invalidateQueries({
-                queryKey: queryKeys.turrets.list(account?.address || ""),
+                queryKey: queryKeys.turrets.list(),
             });
         },
         onError: (error) => {

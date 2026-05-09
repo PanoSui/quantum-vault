@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import {useSniperTarget, useSnipe, useUnsnipe} from "@/hooks/useSniper.ts";
+import { useManyOnlineOffline } from "@/hooks/useOnlineOffline";
 
 const PADDING_PERCENT = 5;
 
@@ -169,6 +170,7 @@ export function MapPage() {
   const { mutate: registerSniper, isPending: isRegisteringSniper } = useRegisterSniperTurret();
   const { mutate: snipe, isPending: isSniping } = useSnipe();
   const { mutate: unsnipe, isPending: isUnsniping } = useUnsnipe();
+  const { mutateAsync: setManyTurretsStatus } = useManyOnlineOffline();
   const [hovered, setHovered] = useState<string | null>(null);
   const [selectedShip, setSelectedShip] = useState<Spaceship | null>(null);
   const [selectedTurret, setSelectedTurret] = useState<Turret | null>(null);
@@ -185,13 +187,31 @@ export function MapPage() {
 
   const isSelectedShipTargeted = target === selectedShip?.character._raw?.key.item_id;
 
+  const setSniperTurretsStatus = async (action: "online" | "offline") => {
+    const targets = (turrets ?? []).filter(
+      (turret) =>
+        turret.isMine &&
+        turret.isSniper &&
+        turret.status.status["@variant"].toLowerCase() !== action
+    );
+    if (targets.length === 0) return;
+    try {
+      await setManyTurretsStatus(targets);
+    } catch (err) {
+      toast.error(`Failed to set turrets ${action}`, {
+        description: err instanceof Error ? err.message : String(err),
+      });
+    }
+  };
+
   const handleAttack = () => {
     if (!selectedShip) return;
     if (isSelectedShipTargeted) {
       unsnipe(undefined, {
-        onSuccess: () => {
+        onSuccess: async () => {
           toast.success(`Stopped sniping ${selectedShip.name}`);
           setSelectedShip(null);
+          await setSniperTurretsStatus("offline");
         },
         onError: (err) => {
           toast.error("Failed to stop sniping", {
@@ -201,11 +221,12 @@ export function MapPage() {
       });
     } else {
       snipe(selectedShip.character, {
-        onSuccess: () => {
+        onSuccess: async () => {
           toast.success(`Sniper locked on ${selectedShip.name}`, {
             description: `${selectedShip.shipClass} • ${selectedShip.faction}`,
           });
           setSelectedShip(null);
+          await setSniperTurretsStatus("online");
         },
         onError: (err) => {
           toast.error("Failed to lock sniper target", {

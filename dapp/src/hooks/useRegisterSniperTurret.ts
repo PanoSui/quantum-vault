@@ -52,7 +52,7 @@ export function useRegisterSniperTurret() {
         },
         onSuccess: async (_data) => {
             await queryClient.invalidateQueries({
-                queryKey: queryKeys.turrets.list(character?.id ?? "")
+                queryKey: queryKeys.turrets.list()
             });
         },
         onError: (error) => {

@@ -1,4 +1,4 @@
-import {useCurrentAccount, useCurrentClient, useDAppKit} from "@mysten/dapp-kit-react";
+import {useCurrentClient, useDAppKit} from "@mysten/dapp-kit-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Transaction } from "@mysten/sui/transactions";
 import { queryKeys } from "@/constants/queryKeys";
@@ -13,7 +13,6 @@ import {Turret} from "@/types/turret.ts";
 export function useRegisterBribeTurret() {
     const dAppKit = useDAppKit();
     const client = useCurrentClient();
-    const account = useCurrentAccount();
     const queryClient = useQueryClient();
     const {data: character} = useMyCharacter();
 
@@ -53,7 +52,7 @@ export function useRegisterBribeTurret() {
         },
         onSuccess: async (_data) => {
             await queryClient.invalidateQueries({
-                queryKey: queryKeys.turrets.list(account?.address || ""),
+                queryKey: queryKeys.turrets.list(),
             });
         },
         onError: (error) => {

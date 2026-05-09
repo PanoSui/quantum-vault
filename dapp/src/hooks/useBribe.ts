@@ -21,7 +21,7 @@ export function useBribe() {
   const account = useCurrentAccount();
   const queryClient = useQueryClient();
   const {data: quantumMetadata} = useQuantumMetadata();
-  const {character} = useMyCharacter();
+  const {data: character} = useMyCharacter();
 
   return useMutation({
     mutationFn: async ({
@@ -57,7 +57,7 @@ export function useBribe() {
     },
     onSuccess: async (_data) => {
       await queryClient.invalidateQueries({
-        queryKey: queryKeys.turrets.list(account?.address || ""),
+        queryKey: queryKeys.turrets.list(),
       });
       await queryClient.invalidateQueries({
         queryKey: queryKeys.quantumBalance(account?.address || ""),

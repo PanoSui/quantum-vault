@@ -15,3 +15,7 @@ export function hexToBytes(hexString: string): Uint8Array {
   }
   return bytes;
 }
+
+export function sleep(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}

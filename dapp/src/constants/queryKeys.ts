@@ -1,6 +1,9 @@
 export const queryKeys = {
   turrets: {
-    list: (owner: string) => ["turrets", "list", owner] as const,
+    list: () => ["turrets", "list"] as const,
+  },
+  networkNodes: {
+    list: (owner: string) => ["networkNodes", "list", owner] as const,
   },
   sniper: {
     target: () => ["sniper", "target"] as const,
