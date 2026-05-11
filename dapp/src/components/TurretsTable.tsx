@@ -33,7 +33,7 @@ export function TurretsTable() {
   const { mutate: toggleOnlineOffline, isPending: isTogglingStatus } = useOnlineOffline();
   const { balance, formattedBalance } = useQuantumBalance();
   const { data: quantumMetadata } = useQuantumMetadata();
-  const { character } = useMyCharacter();
+  const { data: character } = useMyCharacter();
   const [selectedTurret, setSelectedTurret] = useState<Turret | null>(null);
   const [days, setDays] = useState<string>("7");
   const [dialogOpen, setDialogOpen] = useState(false);
