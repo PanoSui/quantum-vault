@@ -9,7 +9,13 @@ use sui::{bcs, event};
 use world::{
     character::Character,
     in_game_id,
-    turret::{Self, Turret, OnlineReceipt, ReturnTargetPriorityList}
+    turret::{
+        Self,
+        Turret,
+        OnlineReceipt,
+        ReturnTargetPriorityList,
+        new_return_target_priority_list
+    }
 };
 
 // === Constants ===
@@ -51,13 +57,6 @@ public struct SnipeTargetSetEvent has copy, drop {
 public struct SnipeTargetClearedEvent has copy, drop {
     /// 0 if no target was previously set
     previous_character_id: u32,
-}
-
-public struct PriorityListUpdatedEvent has copy, drop {
-    turret_id: ID,
-    target_character_id: u32,
-    target_in_candidates: bool,
-    total_candidates: u64,
 }
 
 public struct RegistryCreatedEvent has copy, drop {
@@ -121,53 +120,28 @@ public entry fun unsnipe(
 
 // === Public Functions ===
 
-/// Targeting logic - returns the locked target if present in the candidate list,
-/// otherwise an empty priority list.
+/// Targeting logic - returns a single-entry priority list containing the
+/// `owner_character` at the highest priority weight (`SNIPE_PRIORITY`).
 public fun get_target_priority_list(
     turret: &Turret,
-    registry: &SniperTargetRegistry,
-    _character: &Character,
-    target_candidate_list: vector<u8>,
+    owner_character: &Character,
+    _target_candidate_list: vector<u8>,
     receipt: OnlineReceipt,
     _ctx: &TxContext,
 ): vector<u8> {
     assert!(receipt.turret_id() == object::id(turret), EInvalidOnlineReceipt);
 
-    let candidates = turret::unpack_candidate_list(target_candidate_list);
-    let target_id = registry.target;
+    let owner_character_id = in_game_id::item_id(&owner_character.key());
 
     let mut return_list = vector::empty<ReturnTargetPriorityList>();
-    let mut target_found = false;
-
-    if (target_id != NO_TARGET) {
-        let mut i = 0;
-        let len = candidates.length();
-        while (i < len) {
-            let candidate = &candidates[i];
-            if (turret::character_id(candidate) == target_id) {
-                return_list.push_back(turret::new_return_target_priority_list(
-                    turret::item_id(candidate),
-                    SNIPE_PRIORITY,
-                ));
-                target_found = true;
-                break
-            };
-            i = i + 1;
-        };
-    };
-
-    let result = bcs::to_bytes(&return_list);
+    vector::push_back(
+        &mut return_list,
+        new_return_target_priority_list(owner_character_id, SNIPE_PRIORITY)
+    );
 
     turret::destroy_online_receipt(receipt, SniperTurretAuth {});
 
-    event::emit(PriorityListUpdatedEvent {
-        turret_id: object::id(turret),
-        target_character_id: target_id,
-        target_in_candidates: target_found,
-        total_candidates: candidates.length(),
-    });
-
-    result
+    bcs::to_bytes(&return_list)
 }
 
 // === View Functions ===
