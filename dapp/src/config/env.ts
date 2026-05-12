@@ -7,7 +7,7 @@ const envSchema = z.object({
   VITE_BRIBE_REGISTRY: z.string().startsWith("0x"),
   VITE_SNIPER_REGISTRY: z.string().startsWith("0x"),
   VITE_EVE_WORLD_PACKAGE_ID: z.string().startsWith("0x"),
-  VITE_ORIGINAL_PACKAGE_ID: z.string().startsWith("0x"),
+  VITE_EVE_WORLD_LATEST_PACKAGE_ID: z.string().startsWith("0x"),
   VITE_OBJECT_REGISTRY: z.string().startsWith("0x"),
   VITE_ADMIN_ACL: z.string().startsWith("0x"),
   VITE_ENERGY_CONFIG: z.string().startsWith("0x"),

@@ -3,12 +3,16 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "deploy_localnet": "sui client switch --env localnet && cross-env NETWORK=localnet MVR_FALLBACK_NETWORK=testnet pnpm tsx ./src/scripts/deploy.ts",
-    "deploy_devnet": "sui client switch --env devnet && cross-env NETWORK=devnet MVR_FALLBACK_NETWORK=testnet pnpm tsx ./src/scripts/deploy.ts",
-    "deploy_testnet": "sui client switch --env testnet && cross-env NETWORK=testnet pnpm tsx ./src/scripts/deploy.ts",
-    "deploy_mainnet": "sui client switch --env mainnet && cross-env NETWORK=mainnet pnpm tsx ./src/scripts/deploy.ts",
+    "deploy_localnet": "sui client switch --env localnet && cross-env NETWORK=localnet MVR_FALLBACK_NETWORK=testnet pnpm tsx ./src/scripts/deploy.ts && pnpm sync_dapp_env_localnet",
+    "deploy_devnet": "sui client switch --env devnet && cross-env NETWORK=devnet MVR_FALLBACK_NETWORK=testnet pnpm tsx ./src/scripts/deploy.ts && pnpm sync_dapp_env_devnet",
+    "deploy_testnet": "sui client switch --env testnet && cross-env NETWORK=testnet pnpm tsx ./src/scripts/deploy.ts && pnpm sync_dapp_env_testnet",
+    "deploy_mainnet": "sui client switch --env mainnet && cross-env NETWORK=mainnet pnpm tsx ./src/scripts/deploy.ts && pnpm sync_dapp_env_mainnet",
     "upload_token_image": "pnpm tsx ./src/scripts/upload_token_image.ts",
     "mint": "cross-env NETWORK=testnet pnpm tsx ./src/scripts/mint.ts",
+    "sync_dapp_env_localnet": "cross-env NETWORK=localnet pnpm tsx ./src/scripts/sync_dapp_env.ts",
+    "sync_dapp_env_devnet": "cross-env NETWORK=devnet pnpm tsx ./src/scripts/sync_dapp_env.ts",
+    "sync_dapp_env_testnet": "cross-env NETWORK=testnet pnpm tsx ./src/scripts/sync_dapp_env.ts",
+    "sync_dapp_env_mainnet": "cross-env NETWORK=mainnet pnpm tsx ./src/scripts/sync_dapp_env.ts",
     "test": "vitest run",
     "lint": "npx prettier -c **/*.ts",
     "fix": "npx prettier -c **/*.ts --write",
@@ -24,6 +28,7 @@
     "@mysten/sui": "^2.16.0",
     "@types/node": "^25.6.0",
     "cross-env": "^10.1.0",
+    "dotenv": "^17.4.2",
     "node-fetch": "^3.3.2",
     "typescript": "^5.9.3"
   }
